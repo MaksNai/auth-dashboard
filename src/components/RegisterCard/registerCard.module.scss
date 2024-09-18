@@ -1,0 +1,152 @@
+.registerWrapper {
+  display: flex;
+}
+
+.registerContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+  min-width: 450px;
+  max-width: 700px;
+
+  @media (max-width: 768px) {
+    min-width: auto;
+    max-width: 90vw;
+    padding: 15px;
+  }
+
+  @media (max-width: 480px) {
+    min-width: auto;
+    max-width: 95vw;
+    padding: 10px;
+  }
+}
+
+.progressInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.progress {
+  min-width: 10px;
+  width: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  @media (max-width: 768px) {
+    gap: 10px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 8px;
+  }
+}
+
+.socialButtons {
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.formField label,
+.formField input,
+.formField select,
+.formField textarea {
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
+}
+
+.button {
+  @media (max-width: 480px) {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.fileButtonLabel {
+  align-self: start;
+}
+
+.fileInfo {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.resetButtons {
+  align-self: end;
+}
+
+.avatarField {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 55px;
+  max-height: 55px;
+}
+
+.avatarContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+}
+
+.placeholderImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+}
+
+.previewImage {
+  max-width: 40px;
+  max-height: 40px;
+  border-radius: 50%;
+}
+
+.avatarInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.checkboxTerms {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.modalContent {
+  max-width: 220px;
+  padding: 10px;
+  border-radius: 5px;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
