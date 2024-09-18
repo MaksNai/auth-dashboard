@@ -9,16 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@gravity-ui/date-components": "^2.9.0",
+    "@gravity-ui/date-utils": "^2.5.3",
+    "@gravity-ui/page-constructor": "^5.23.3",
+    "@gravity-ui/uikit": "^6.25.1",
+    "next": "14.2.10",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.10"
+    "react-hook-form": "^7.53.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@gravity-ui/components": "^3.10.1",
+    "@types/luxon": "^3.4.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
-    "eslint-config-next": "14.2.10"
+    "eslint-config-next": "14.2.10",
+    "sass": "^1.78.0",
+    "typescript": "^5"
   }
 }

@@ -1,0 +1,24 @@
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.modalTitle {
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
+}
+
+.modalBody {
+  overflow-y: auto;
+  max-width: 1000px;
+  padding: 20px;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
