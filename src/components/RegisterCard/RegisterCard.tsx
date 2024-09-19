@@ -9,6 +9,7 @@ import {
   Card,
   Checkbox,
   Icon,
+  Loader,
   Progress,
   RadioGroup,
   Select,
@@ -19,7 +20,8 @@ import {
 import { FormField, TermsModal } from "@/components/";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import ReCAPTCHA from "react-google-recaptcha";
+import { Controller, useForm } from "react-hook-form";
 import styles from "./registerCard.module.scss";
 
 interface GenderOption {
@@ -52,7 +54,10 @@ interface FormData {
   country: string;
   avatar: File | null;
   acceptTerms: boolean;
+  recaptcha: string;
 }
+
+const CAPTCHA_KEY = process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY;
 
 export const RegisterCard = () => {
   const {
@@ -62,6 +67,8 @@ export const RegisterCard = () => {
     watch,
     reset,
     trigger,
+    setError,
+    control,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -88,6 +95,8 @@ export const RegisterCard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const recaptchaRef = useRef<ReCAPTCHA | null>(null);
 
   const maxDate = dateTimeParse(Date.now());
   const minDate = dateTimeParse(
@@ -124,6 +133,14 @@ export const RegisterCard = () => {
   };
 
   const handleFormSubmit = (data: FormData) => {
+    if (!data.recaptcha) {
+      setError("recaptcha", {
+        type: "manual",
+        message: "Подтвердите, что вы не робот",
+      });
+
+      return;
+    }
     console.log("Submitted data:", data);
   };
 
@@ -139,6 +156,9 @@ export const RegisterCard = () => {
       avatar: null,
       acceptTerms: false,
     });
+    if (recaptchaRef.current) {
+      recaptchaRef.current.reset();
+    }
 
     setAvatarPreview(null);
     setSelectedFileName(null);
@@ -148,9 +168,8 @@ export const RegisterCard = () => {
 
   // Use useEffect to calculate and set the progress value
   useEffect(() => {
-    const filledFieldsCount = Object.values(watchedFields).filter(
-      (val) => val
-    ).length;
+    const filledFieldsCount =
+      Object.values(watchedFields).filter(Boolean).length;
     const totalFields = 8;
     setProgressValue((filledFieldsCount / totalFields) * 100);
   }, [watchedFields]);
@@ -226,13 +245,23 @@ export const RegisterCard = () => {
               onBlur={() => trigger("email")}
             />
           </FormField>
+
           <FormField label="Пароль" error={errors.password?.message}>
-            <PasswordInput
-              size="l"
-              value={watch("password") || ""}
-              onUpdate={(value) => setValue("password", value)}
-              errorMessage={errors.password?.message}
-              showRevealButton
+            <Controller
+              name="password"
+              control={control}
+              rules={{
+                required: "Введите пароль",
+              }}
+              render={({ field }) => (
+                <PasswordInput
+                  size="l"
+                  value={field.value || ""}
+                  onUpdate={field.onChange}
+                  errorMessage={errors.password?.message}
+                  showRevealButton
+                />
+              )}
             />
           </FormField>
 
@@ -240,17 +269,27 @@ export const RegisterCard = () => {
             label="Подтвердите пароль"
             error={errors.confirmPassword?.message}
           >
-            <PasswordInput
-              size="l"
-              value={watch("confirmPassword") || ""}
-              onUpdate={(value) => setValue("confirmPassword", value)}
-              {...register("confirmPassword", {
+            <Controller
+              name="confirmPassword"
+              control={control}
+              rules={{
                 required: "Подтвердите пароль",
                 validate: (value) =>
                   value === watch("password") || "Пароли не совпадают",
-              })}
-              onBlur={() => trigger("confirmPassword")}
-              validationState={!!errors.confirmPassword ? "invalid" : undefined}
+              }}
+              render={({ field }) => (
+                <PasswordInput
+                  size="l"
+                  value={field.value || ""}
+                  onUpdate={(value) => {
+                    field.onChange(value);
+                    trigger("confirmPassword");
+                  }}
+                  onBlur={() => trigger("confirmPassword")}
+                  errorMessage={errors.confirmPassword?.message}
+                  showRevealButton
+                />
+              )}
             />
           </FormField>
 
@@ -276,14 +315,14 @@ export const RegisterCard = () => {
           </FormField>
           <FormField label="Страна" error={errors.country?.message}>
             {isLoading ? (
-              <p>Loading...</p>
+              <Loader size="s" />
             ) : (
               <Select
                 {...register("country")}
                 size="l"
                 options={countries}
                 value={watchedFields.country ? [watchedFields.country] : []}
-                onUpdate={(value: string[]) => setValue("country", value[0])}
+                onUpdate={([country]: string[]) => setValue("country", country)}
                 filterable
               />
             )}
@@ -359,6 +398,17 @@ export const RegisterCard = () => {
             </div>
 
             <TermsModal open={modalOpen} onClose={() => setModalOpen(false)} />
+          </FormField>
+
+          <FormField error={errors.recaptcha?.message}>
+            <div className={styles.captchaWrapper}>
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={CAPTCHA_KEY || ""}
+                className={styles.recaptcha}
+                onChange={(value) => setValue("recaptcha", value || "")}
+              />
+            </div>
           </FormField>
 
           <Button

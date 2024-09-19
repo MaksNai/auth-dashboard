@@ -1,0 +1,17 @@
+.toggler {
+  display: flex;
+  gap: 10px;
+  min-height: 50px;
+  align-items: center;
+  justify-content: flex-end;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  padding: 20px;
+
+  b {
+    font-weight: bold;
+  }
+
+  svg {
+    transition: color 0.3s ease;
+  }
+}
